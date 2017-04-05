@@ -55,29 +55,6 @@ public class SSPExampleApplication extends CoapServer {
 	@Option(name = "--port", usage = "Port of the SSP")
 	private int SSP_PORT = 5683;
 	
-	public SSPExampleApplication(String[] args) {
-    	
-    	// The args4j command line parser
-		CmdLineParser parser = new CmdLineParser(this);
-		parser.setUsageWidth(80);
-
-		// Parse the arguments
-		try {
-			parser.parseArgument(args);
-			// configure logging
-			LoggingConfiguration.configureDefaultLogging();
-			
-			// create server and register resources
-			SSPExampleApplication server = new SSPExampleApplication(BlockSize.SIZE_64, BlockSize.SIZE_64);
-			server.registerSimpleNotObservableWebresource();
-			server.registerSimpleObservableTimeResource();
-			server.registerAtSSP(); 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-    	
-	}
-	
     private void registerSimpleNotObservableWebresource() {
         // create initial status (one string per paragraph)
         String[] status = new String[10];
@@ -113,6 +90,23 @@ public class SSPExampleApplication extends CoapServer {
 }    
     
     public static void main(String[] args) {
-    	new SSPExampleApplication(args);
+    	// The args4j command line parser
+		CmdLineParser parser = new CmdLineParser(SSPExampleApplication.class);
+		parser.setUsageWidth(80);
+
+		// Parse the arguments
+		try {
+			parser.parseArgument(args);
+			// configure logging
+			LoggingConfiguration.configureDefaultLogging();
+			
+			// create server and register resources
+			SSPExampleApplication server = new SSPExampleApplication(BlockSize.SIZE_64, BlockSize.SIZE_64);
+			server.registerSimpleNotObservableWebresource();
+			server.registerSimpleObservableTimeResource();
+			server.registerAtSSP(); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 }
