@@ -55,7 +55,7 @@ public class SimpleNotObservableWebresource extends NotObservableWebresource<Str
 
     private int weakEtag;
 
-    protected SimpleNotObservableWebresource(String servicePath, String[] initialStatus, long lifetimeSeconds,
+    public SimpleNotObservableWebresource(String servicePath, String[] initialStatus, long lifetimeSeconds,
                                              ScheduledExecutorService executor) {
 
         super(servicePath, initialStatus, lifetimeSeconds, executor);

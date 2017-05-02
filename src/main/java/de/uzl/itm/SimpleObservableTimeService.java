@@ -25,7 +25,16 @@
 package de.uzl.itm;
 
 import static de.uzl.itm.ncoap.application.linkformat.LinkParam.Key.*;
-import static de.uzl.itm.ncoap.message.options.ContentFormat.*;
+
+import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.apache.log4j.Logger;
 
 import com.google.common.primitives.Longs;
 import com.google.common.util.concurrent.SettableFuture;
@@ -33,18 +42,12 @@ import com.google.common.util.concurrent.SettableFuture;
 import de.uzl.itm.ncoap.application.linkformat.LinkParam;
 import de.uzl.itm.ncoap.application.server.resource.ObservableWebresource;
 import de.uzl.itm.ncoap.application.server.resource.WrappedResourceStatus;
-
-import de.uzl.itm.ncoap.message.*;
+import de.uzl.itm.ncoap.message.CoapMessage;
+import de.uzl.itm.ncoap.message.CoapRequest;
+import de.uzl.itm.ncoap.message.CoapResponse;
+import de.uzl.itm.ncoap.message.MessageCode;
+import de.uzl.itm.ncoap.message.MessageType;
 import de.uzl.itm.ncoap.message.options.ContentFormat;
-
-import org.apache.log4j.Logger;
-
-import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * This {@link de.uzl.itm.ncoap.application.server.resource.Webresource} updates on a regular basis and provides
@@ -103,8 +106,17 @@ public class SimpleObservableTimeService extends ObservableWebresource<Long> {
         this.updateInterval = updateInterval;
         schedulePeriodicResourceUpdate();
 
+        Set<Long> keys = payloadTemplates.keySet();
+        Long[] array = keys.toArray(new Long[keys.size()]);
+        
+        // Convert to "1 3 45"
+        String[] values = new String[keys.size()];
+        for (int i = 0; i < array.length; i++) {
+        	values[i] = array[i].toString();
+        }
+        
         //Sets the link attributes for supported content types ('ct')
-        String ctValue = "\"" + TEXT_PLAIN_UTF8 + " " + APP_XML + " " + APP_TURTLE + "\"";
+        String ctValue = "\"" + String.join(" ", values) + "\"";
         this.setLinkParam(LinkParam.createLinkParam(CT, ctValue));
 
         //Sets the link attribute to give the resource a title

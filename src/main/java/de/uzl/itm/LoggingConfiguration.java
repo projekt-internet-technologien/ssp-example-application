@@ -26,8 +26,6 @@ package de.uzl.itm;
 
 import org.apache.log4j.xml.DOMConfigurator;
 
-import de.uzl.itm.LoggingConfiguration;
-
 import java.io.File;
 import java.net.URL;
 

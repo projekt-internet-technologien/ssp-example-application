@@ -32,11 +32,8 @@ import java.net.URISyntaxException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
-import de.uzl.itm.ncoap.application.client.CoapClient;
-import de.uzl.itm.ncoap.application.server.CoapServer;
+import de.uzl.itm.ncoap.application.endpoint.CoapEndpoint;
 import de.uzl.itm.ncoap.communication.blockwise.BlockSize;
-import de.uzl.itm.ncoap.examples.client.callback.SimpleCallback;
-import de.uzl.itm.ncoap.examples.server.LoggingConfiguration;
 import de.uzl.itm.ncoap.message.CoapRequest;
 import de.uzl.itm.ncoap.message.MessageCode;
 import de.uzl.itm.ncoap.message.MessageType;
@@ -47,7 +44,7 @@ import de.uzl.itm.ncoap.message.options.OptionValue;
  *
  * @author Oliver Kleine
  */
-public class SSPExampleApplication extends CoapServer {
+public class SSPExampleApplication extends CoapEndpoint {
 
 	@Option(name = "--host", usage = "Host of the SSP (ip or domain)")
 	private String SSP_HOST = "141.83.151.196";
@@ -84,9 +81,8 @@ public class SSPExampleApplication extends CoapServer {
         CoapRequest coapRequest = new CoapRequest(MessageType.CON, MessageCode.POST, resourceURI);
         InetSocketAddress remoteSocket = new InetSocketAddress(SSP_HOST, SSP_PORT);
 
-        CoapClient c = new CoapClient();
         SimpleCallback callback = new SimpleCallback();
-        c.sendCoapRequest(coapRequest, remoteSocket, callback);
+        this.sendCoapRequest(coapRequest, remoteSocket, callback);
 }    
     
     public static void main(String[] args) {
